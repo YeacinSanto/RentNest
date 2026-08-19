@@ -4,6 +4,8 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import { authRouter } from "./modules/auth/auth.route";
 import { propertyRoute } from "./modules/properties/properties.route";
+import { landlordRouter } from "./modules/landlord/landlord.route";
+import { adminRoute } from "./modules/admin/admin.route";
 
 const app: Application = express()
 
@@ -23,6 +25,8 @@ app.get('/', (req:Request, res:Response) => {
 
 app.use("/api/auth",authRouter)
 app.use("/api",propertyRoute)
+app.use("/api/landlord/",landlordRouter)
+app.use("/api/admin", adminRoute)
 
 
 

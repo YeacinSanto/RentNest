@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma"
 const getAllProperty = async()=>{
     const property = await prisma.properties.findMany();
 
-    if(!property){
+    if(property.length === 0){
         throw new Error("No property is available at this moment!")
     }
 

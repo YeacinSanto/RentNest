@@ -4,9 +4,10 @@ import bcrypt from "bcrypt"
 import { ICreatePayLoad, ILoginPayLoad } from "./auth.interface";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../utils/jwt";
+import { Role } from "../../generated/prisma/enums";
 
 const userRegister = async (payload : ICreatePayLoad)=>{
-    const {name,email,password} = payload;
+    const {name,email,password,role} = payload;
     
     const isUserExist = await prisma.user.findUnique({
         where : {email}
@@ -15,6 +16,9 @@ const userRegister = async (payload : ICreatePayLoad)=>{
     if(isUserExist){
         throw new Error("User with this email is already exist")
     }
+    if (role === Role.ADMIN) {
+        throw new Error("You are not allowed as ADMIN");
+    }
 
     const hashedPassword = await bcrypt.hash(password,Number(config.bcrypt_salt_round))
 
@@ -22,7 +26,8 @@ const userRegister = async (payload : ICreatePayLoad)=>{
         data:{
             name,
             email,
-            password : hashedPassword
+            password : hashedPassword,
+            role
         }
     })
 
