@@ -26,7 +26,7 @@ const getPropertyById = async(propId : string)=>{
 const getPropertyCategory = async()=>{
     const result = await prisma.categories.findMany();
 
-    if(!result){
+    if(result.length===0){
         throw new Error("Sorry! at this moment no category of property is founded!")
     }
 
