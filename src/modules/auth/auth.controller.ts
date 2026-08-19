@@ -6,13 +6,14 @@ import status from "http-status";
 
 
 
+
 const registerUser = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const payLoad = req.body
     const result = await authService.userRegister(payLoad)
 
     sendResponse(res,{
         success : true,
-        statusCode : status.OK,
+        statusCode : status.CREATED,
         message : "User created successfully!",
         data : result
     })
@@ -46,8 +47,24 @@ const userLogin = catchAsync(async(req:Request,res:Response,next:NextFunction)=>
     })
 })
 
+const myProfile = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user?.id!;
+
+        const result = await authService.getMyProfile(userId);
+
+        sendResponse(res, {
+            success: true,
+            statusCode: status.OK,
+            message: "User profile retrieved successfully",
+            data: result
+        });
+    }
+);
+
 
 export const authController = {
     registerUser,
-    userLogin
+    userLogin,
+    myProfile
 }
