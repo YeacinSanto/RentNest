@@ -14,6 +14,8 @@ model Properties{
     category Categories @relation(fields: [categoryId], references: [id])
     landlord User @relation(fields: [landlordId], references: [id])
 
+    rentalRequests RentalRequests[]
+
     @@map("properties")
 
 }

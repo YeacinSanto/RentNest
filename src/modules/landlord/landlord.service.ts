@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { ICreateProperty } from "./landlord.interface";
+import { ICreateProperty, IUpdateProperty, IUpdateRentalRequest } from "./landlord.interface";
 
 const createPropertyIntoDB = async (
     payLoad: ICreateProperty,
@@ -30,6 +30,97 @@ const createPropertyIntoDB = async (
     return property;
 };
 
+
+const updatePropertyIntoDB = async(propertyId:string, landlordId:string, payLoad:IUpdateProperty)=>{
+    const property = await prisma.properties.findFirst({
+        where : {
+            id : propertyId,
+            landlordId : landlordId
+        }
+    });
+
+    if(!property){
+        throw new Error("Property not found or you are not the owner");
+    }
+
+
+
+    const updateProperty = await prisma.properties.update({
+        where : {
+            id : propertyId
+        },
+        data : payLoad
+    })
+
+    return updateProperty
+}
+
+const deletePropertyFromDB = async(propertyId:string,landlordId:string)=>{
+    const property = await prisma.properties.findFirst({
+        where : {
+            id : propertyId,
+            landlordId : landlordId
+        }
+    });
+
+    if(!property){
+        throw new Error("Property not found or you are not the owner");
+    }
+
+    const deleteProperty = await prisma.properties.delete({
+        where : {
+            id : propertyId
+        }
+    })
+
+    return null
+}
+
+const getALlRentalRequestFromDB = async(landlordId : string)=>{
+    const request = await prisma.rentalRequests.findMany({
+        where : {
+            property : {
+                landlordId
+            }
+        }
+    })
+    return request
+}
+
+const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:IUpdateRentalRequest)=>{
+    const request = await prisma.rentalRequests.findFirst({
+        where : {
+            id : requestId,
+            property : {
+                landlordId : landlordId
+            }
+        }
+    });
+
+    if(!request){
+        throw new Error("Rental request not found");
+    }
+
+    if (request.status !== "PENDING") {
+        throw new Error("This rental request has already been processed");
+    }
+
+    const updateRequest = await prisma.rentalRequests.update({
+        where : {
+            id : requestId
+        },
+        data : {
+            status : payLoad.status
+        }
+    })
+
+    return updateRequest
+}
+
 export const landlordService = {
-    createPropertyIntoDB
+    createPropertyIntoDB,
+    updatePropertyIntoDB,
+    deletePropertyFromDB,
+    getALlRentalRequestFromDB,
+    updateRentalRequest
 };

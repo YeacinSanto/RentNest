@@ -52,6 +52,11 @@ export type Categories = Prisma.CategoriesModel
  */
 export type Properties = Prisma.PropertiesModel
 /**
+ * Model RentalRequests
+ * 
+ */
+export type RentalRequests = Prisma.RentalRequestsModel
+/**
  * Model User
  * 
  */

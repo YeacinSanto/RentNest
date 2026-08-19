@@ -14,3 +14,9 @@ enum PropertyStatus {
     RENTED 
     UNAVAILABLE 
 }
+
+enum RentalRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
