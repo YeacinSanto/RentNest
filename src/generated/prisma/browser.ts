@@ -33,6 +33,11 @@ export type Properties = Prisma.PropertiesModel
  */
 export type RentalRequests = Prisma.RentalRequestsModel
 /**
+ * Model Reviews
+ * 
+ */
+export type Reviews = Prisma.ReviewsModel
+/**
  * Model User
  * 
  */

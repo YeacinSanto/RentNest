@@ -15,5 +15,5 @@ export interface IUpdateProperty {
 }
 
 export interface IUpdateRentalRequest {
-    status: "APPROVED" | "REJECTED";
+    status: "APPROVED" | "REJECTED" | "COMPLETED";
 }

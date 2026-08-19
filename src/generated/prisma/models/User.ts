@@ -208,6 +208,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   properties?: Prisma.PropertiesListRelationFilter
   rentalRequests?: Prisma.RentalRequestsListRelationFilter
+  reviews?: Prisma.ReviewsListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -221,6 +222,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   properties?: Prisma.PropertiesOrderByRelationAggregateInput
   rentalRequests?: Prisma.RentalRequestsOrderByRelationAggregateInput
+  reviews?: Prisma.ReviewsOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -237,6 +239,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   properties?: Prisma.PropertiesListRelationFilter
   rentalRequests?: Prisma.RentalRequestsListRelationFilter
+  reviews?: Prisma.ReviewsListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -278,6 +281,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   properties?: Prisma.PropertiesCreateNestedManyWithoutLandlordInput
   rentalRequests?: Prisma.RentalRequestsCreateNestedManyWithoutTenantInput
+  reviews?: Prisma.ReviewsCreateNestedManyWithoutTenantInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -291,6 +295,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   properties?: Prisma.PropertiesUncheckedCreateNestedManyWithoutLandlordInput
   rentalRequests?: Prisma.RentalRequestsUncheckedCreateNestedManyWithoutTenantInput
+  reviews?: Prisma.ReviewsUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type UserUpdateInput = {
@@ -304,6 +309,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertiesUpdateManyWithoutLandlordNestedInput
   rentalRequests?: Prisma.RentalRequestsUpdateManyWithoutTenantNestedInput
+  reviews?: Prisma.ReviewsUpdateManyWithoutTenantNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -317,6 +323,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertiesUncheckedUpdateManyWithoutLandlordNestedInput
   rentalRequests?: Prisma.RentalRequestsUncheckedUpdateManyWithoutTenantNestedInput
+  reviews?: Prisma.ReviewsUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -418,6 +425,20 @@ export type UserUpdateOneRequiredWithoutRentalRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRentalRequestsInput, Prisma.UserUpdateWithoutRentalRequestsInput>, Prisma.UserUncheckedUpdateWithoutRentalRequestsInput>
 }
 
+export type UserCreateNestedOneWithoutReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsInput
+  upsert?: Prisma.UserUpsertWithoutReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsInput, Prisma.UserUpdateWithoutReviewsInput>, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+}
+
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
@@ -436,6 +457,7 @@ export type UserCreateWithoutPropertiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rentalRequests?: Prisma.RentalRequestsCreateNestedManyWithoutTenantInput
+  reviews?: Prisma.ReviewsCreateNestedManyWithoutTenantInput
 }
 
 export type UserUncheckedCreateWithoutPropertiesInput = {
@@ -448,6 +470,7 @@ export type UserUncheckedCreateWithoutPropertiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rentalRequests?: Prisma.RentalRequestsUncheckedCreateNestedManyWithoutTenantInput
+  reviews?: Prisma.ReviewsUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type UserCreateOrConnectWithoutPropertiesInput = {
@@ -476,6 +499,7 @@ export type UserUpdateWithoutPropertiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rentalRequests?: Prisma.RentalRequestsUpdateManyWithoutTenantNestedInput
+  reviews?: Prisma.ReviewsUpdateManyWithoutTenantNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPropertiesInput = {
@@ -488,6 +512,7 @@ export type UserUncheckedUpdateWithoutPropertiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rentalRequests?: Prisma.RentalRequestsUncheckedUpdateManyWithoutTenantNestedInput
+  reviews?: Prisma.ReviewsUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type UserCreateWithoutRentalRequestsInput = {
@@ -500,6 +525,7 @@ export type UserCreateWithoutRentalRequestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertiesCreateNestedManyWithoutLandlordInput
+  reviews?: Prisma.ReviewsCreateNestedManyWithoutTenantInput
 }
 
 export type UserUncheckedCreateWithoutRentalRequestsInput = {
@@ -512,6 +538,7 @@ export type UserUncheckedCreateWithoutRentalRequestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertiesUncheckedCreateNestedManyWithoutLandlordInput
+  reviews?: Prisma.ReviewsUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type UserCreateOrConnectWithoutRentalRequestsInput = {
@@ -540,6 +567,7 @@ export type UserUpdateWithoutRentalRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertiesUpdateManyWithoutLandlordNestedInput
+  reviews?: Prisma.ReviewsUpdateManyWithoutTenantNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRentalRequestsInput = {
@@ -552,6 +580,75 @@ export type UserUncheckedUpdateWithoutRentalRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertiesUncheckedUpdateManyWithoutLandlordNestedInput
+  reviews?: Prisma.ReviewsUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type UserCreateWithoutReviewsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertiesCreateNestedManyWithoutLandlordInput
+  rentalRequests?: Prisma.RentalRequestsCreateNestedManyWithoutTenantInput
+}
+
+export type UserUncheckedCreateWithoutReviewsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertiesUncheckedCreateNestedManyWithoutLandlordInput
+  rentalRequests?: Prisma.RentalRequestsUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type UserCreateOrConnectWithoutReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+}
+
+export type UserUpsertWithoutReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsInput, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsInput, Prisma.UserUncheckedCreateWithoutReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsInput, Prisma.UserUncheckedUpdateWithoutReviewsInput>
+}
+
+export type UserUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertiesUpdateManyWithoutLandlordNestedInput
+  rentalRequests?: Prisma.RentalRequestsUpdateManyWithoutTenantNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertiesUncheckedUpdateManyWithoutLandlordNestedInput
+  rentalRequests?: Prisma.RentalRequestsUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -562,11 +659,13 @@ export type UserUncheckedUpdateWithoutRentalRequestsInput = {
 export type UserCountOutputType = {
   properties: number
   rentalRequests: number
+  reviews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | UserCountOutputTypeCountPropertiesArgs
   rentalRequests?: boolean | UserCountOutputTypeCountRentalRequestsArgs
+  reviews?: boolean | UserCountOutputTypeCountReviewsArgs
 }
 
 /**
@@ -593,6 +692,13 @@ export type UserCountOutputTypeCountRentalRequestsArgs<ExtArgs extends runtime.T
   where?: Prisma.RentalRequestsWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewsWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -605,6 +711,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   properties?: boolean | Prisma.User$propertiesArgs<ExtArgs>
   rentalRequests?: boolean | Prisma.User$rentalRequestsArgs<ExtArgs>
+  reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -645,6 +752,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | Prisma.User$propertiesArgs<ExtArgs>
   rentalRequests?: boolean | Prisma.User$rentalRequestsArgs<ExtArgs>
+  reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -655,6 +763,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     properties: Prisma.$PropertiesPayload<ExtArgs>[]
     rentalRequests: Prisma.$RentalRequestsPayload<ExtArgs>[]
+    reviews: Prisma.$ReviewsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1061,6 +1170,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   properties<T extends Prisma.User$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertiesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rentalRequests<T extends Prisma.User$rentalRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rentalRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RentalRequestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1536,6 +1646,30 @@ export type User$rentalRequestsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.RentalRequestsScalarFieldEnum | Prisma.RentalRequestsScalarFieldEnum[]
+}
+
+/**
+ * User.reviews
+ */
+export type User$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Reviews
+   */
+  select?: Prisma.ReviewsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Reviews
+   */
+  omit?: Prisma.ReviewsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewsInclude<ExtArgs> | null
+  where?: Prisma.ReviewsWhereInput
+  orderBy?: Prisma.ReviewsOrderByWithRelationInput | Prisma.ReviewsOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewsScalarFieldEnum | Prisma.ReviewsScalarFieldEnum[]
 }
 
 /**

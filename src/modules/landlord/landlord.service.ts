@@ -101,8 +101,20 @@ const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:I
         throw new Error("Rental request not found");
     }
 
-    if (request.status !== "PENDING") {
-        throw new Error("This rental request has already been processed");
+    // if (request.status !== "PENDING") {
+    //     throw new Error("This rental request has already been processed");
+    // }
+
+    if (request.status === "REJECTED") {
+        throw new Error("Rejected rental request cannot be updated");
+    }
+
+    if (request.status === "COMPLETED") {
+        throw new Error("Rental request is already completed");
+    }
+
+    if (payLoad.status === "COMPLETED" &&request.status !== "APPROVED") {
+        throw new Error("Only an approved rental can be completed");
     }
 
     const updateRequest = await prisma.rentalRequests.update({

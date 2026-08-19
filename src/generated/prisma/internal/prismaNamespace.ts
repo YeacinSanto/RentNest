@@ -400,6 +400,7 @@ export const ModelName = {
   Categories: 'Categories',
   Properties: 'Properties',
   RentalRequests: 'RentalRequests',
+  Reviews: 'Reviews',
   User: 'User'
 } as const
 
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "categories" | "properties" | "rentalRequests" | "user"
+    modelProps: "categories" | "properties" | "rentalRequests" | "reviews" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -642,6 +643,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Reviews: {
+      payload: Prisma.$ReviewsPayload<ExtArgs>
+      fields: Prisma.ReviewsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReviewsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReviewsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        findFirst: {
+          args: Prisma.ReviewsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReviewsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        findMany: {
+          args: Prisma.ReviewsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>[]
+        }
+        create: {
+          args: Prisma.ReviewsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        createMany: {
+          args: Prisma.ReviewsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReviewsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>[]
+        }
+        delete: {
+          args: Prisma.ReviewsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        update: {
+          args: Prisma.ReviewsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReviewsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReviewsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReviewsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReviewsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewsPayload>
+        }
+        aggregate: {
+          args: Prisma.ReviewsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReviews>
+        }
+        groupBy: {
+          args: Prisma.ReviewsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReviewsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewsCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -792,6 +867,18 @@ export const RentalRequestsScalarFieldEnum = {
 export type RentalRequestsScalarFieldEnum = (typeof RentalRequestsScalarFieldEnum)[keyof typeof RentalRequestsScalarFieldEnum]
 
 
+export const ReviewsScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  tenantId: 'tenantId',
+  propertyId: 'propertyId'
+} as const
+
+export type ReviewsScalarFieldEnum = (typeof ReviewsScalarFieldEnum)[keyof typeof ReviewsScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -885,6 +972,20 @@ export type ListEnumRentalRequestStatusFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -913,16 +1014,16 @@ export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Float'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1079,6 +1180,7 @@ export type GlobalOmitConfig = {
   categories?: Prisma.CategoriesOmit
   properties?: Prisma.PropertiesOmit
   rentalRequests?: Prisma.RentalRequestsOmit
+  reviews?: Prisma.ReviewsOmit
   user?: Prisma.UserOmit
 }
 
