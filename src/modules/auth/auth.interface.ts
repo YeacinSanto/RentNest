@@ -4,3 +4,8 @@ export interface ICreatePayLoad {
     password : string,
     
 }
+
+export interface ILoginPayLoad{
+    email : string,
+    password : string
+}
