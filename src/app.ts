@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import config from "./config";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import { userRouter } from "./modules/user/user.route";
 
 const app: Application = express()
 
@@ -19,6 +20,7 @@ app.get('/', (req:Request, res:Response) => {
   res.send('Hello World!')
 })
 
+app.use("/api/users",userRouter)
 
 
 
