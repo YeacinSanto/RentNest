@@ -1,0 +1,19 @@
+model Properties{
+    id String @id @default(uuid())
+    title String
+    description String @db.Text()
+    location String
+    price String
+    categoryId String
+    landlordId String
+    status PropertyStatus @default(AVAILABLE)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    category Categories @relation(fields: [categoryId], references: [id])
+    landlord User @relation(fields: [landlordId], references: [id])
+
+    @@map("properties")
+
+}

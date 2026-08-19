@@ -1,0 +1,11 @@
+
+model Categories{
+    id String @unique @default(uuid())
+    name String @db.VarChar(255)
+    description String @db.Text()
+    
+    properties Properties[]
+
+
+    @@map("categories")
+}
