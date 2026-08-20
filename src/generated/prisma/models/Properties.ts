@@ -494,10 +494,6 @@ export type EnumPropertyStatusFieldUpdateOperationsInput = {
   set?: $Enums.PropertyStatus
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type PropertiesCreateNestedOneWithoutRentalRequestsInput = {
   create?: Prisma.XOR<Prisma.PropertiesCreateWithoutRentalRequestsInput, Prisma.PropertiesUncheckedCreateWithoutRentalRequestsInput>
   connectOrCreate?: Prisma.PropertiesCreateOrConnectWithoutRentalRequestsInput

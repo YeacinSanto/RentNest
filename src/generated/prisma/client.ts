@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Categories = Prisma.CategoriesModel
 /**
+ * Model Payments
+ * 
+ */
+export type Payments = Prisma.PaymentsModel
+/**
  * Model Properties
  * 
  */

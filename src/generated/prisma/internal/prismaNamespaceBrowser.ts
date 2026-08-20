@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Categories: 'Categories',
+  Payments: 'Payments',
   Properties: 'Properties',
   RentalRequests: 'RentalRequests',
   Reviews: 'Reviews',
@@ -81,6 +82,18 @@ export const CategoriesScalarFieldEnum = {
 } as const
 
 export type CategoriesScalarFieldEnum = (typeof CategoriesScalarFieldEnum)[keyof typeof CategoriesScalarFieldEnum]
+
+
+export const PaymentsScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  transactionId: 'transactionId',
+  rentalRequestId: 'rentalRequestId',
+  createdAt: 'createdAt',
+  status: 'status'
+} as const
+
+export type PaymentsScalarFieldEnum = (typeof PaymentsScalarFieldEnum)[keyof typeof PaymentsScalarFieldEnum]
 
 
 export const PropertiesScalarFieldEnum = {
@@ -151,4 +164,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
