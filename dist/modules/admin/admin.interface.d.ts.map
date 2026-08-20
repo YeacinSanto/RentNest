@@ -1,1 +1,0 @@
-{"version":3,"file":"admin.interface.d.ts","sourceRoot":"","sources":["../../../src/modules/admin/admin.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,sBAAsB;IACnC,IAAI,EAAG,MAAM,CAAC;IACd,WAAW,EAAG,MAAM,CAAA;CACvB;AAED,MAAM,WAAW,iBAAiB;IAC9B,MAAM,EAAG,QAAQ,GAAG,QAAQ,CAAA;CAC/B"}
