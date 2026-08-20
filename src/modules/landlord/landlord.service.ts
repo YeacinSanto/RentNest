@@ -1,10 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { ICreateProperty, IUpdateProperty, IUpdateRentalRequest } from "./landlord.interface";
 
-const createPropertyIntoDB = async (
-    payLoad: ICreateProperty,
-    landlord: string
-) => {
+const createPropertyIntoDB = async (payLoad: ICreateProperty,landlord: string) => {
     const {title,description,location,price,categoryName} = payLoad
     const property = await prisma.properties.create({
         data: {
