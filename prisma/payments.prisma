@@ -4,6 +4,10 @@ model Payments{
     transactionId String?
     rentalRequestId String @unique
 
+    method String?
+    provider String @default("STRIPE")
+    paidAt DateTime?
+
     createdAt DateTime @default(now())
 
     status PaymentStatus @default(PENDING)

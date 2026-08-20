@@ -1,10 +1,12 @@
 import { prisma } from "../../lib/prisma"
+import { IFilterProperty } from "./properties.interface";
 
-const getAllProperty = async(filters: {location?:string, category?:string, minPrice?:string, maxPrice?:string})=>{
+const getAllProperty = async(filters: IFilterProperty)=>{
     const {location, category, minPrice, maxPrice} = filters;
 
     const property = await prisma.properties.findMany({
         where : {
+            status : "AVAILABLE",
             location : location ? {contains : location, mode : "insensitive"} : undefined,
             category : category ? {name : {equals : category, mode : "insensitive"}} : undefined
         },
@@ -13,8 +15,8 @@ const getAllProperty = async(filters: {location?:string, category?:string, minPr
         }
     });
 
-    const filtered = property.filter((p)=>{
-        const price = Number(p.price);
+    const filtered = property.filter((property)=>{
+        const price = Number(property.price);
 
         if(minPrice && price < Number(minPrice)) return false;
         if(maxPrice && price > Number(maxPrice)) return false;

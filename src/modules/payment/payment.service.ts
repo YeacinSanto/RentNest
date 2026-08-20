@@ -96,7 +96,9 @@ const handleStripeWebhook = async(payLoad:Buffer, signature:string)=>{
             },
             data:{
                 status : "PAID",
-                transactionId: session.payment_intent as string
+                transactionId: session.payment_intent as string,
+                method : "CARD",
+                paidAt : new Date()
             }
         })
     }

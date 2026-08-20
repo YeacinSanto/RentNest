@@ -117,6 +117,18 @@ const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:I
         throw new Error("Only an approved rental can be completed");
     }
 
+    if (payLoad.status === "COMPLETED") {
+        const payment = await prisma.payments.findUnique({
+            where : {
+                rentalRequestId : requestId
+            }
+        });
+
+        if (!payment || payment.status !== "PAID") {
+            throw new Error("Rental request cannot be completed before payment is made");
+        }
+    }
+
     const updateRequest = await prisma.rentalRequests.update({
         where : {
             id : requestId
