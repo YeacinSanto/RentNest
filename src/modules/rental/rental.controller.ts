@@ -3,7 +3,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import { rentalService } from "./rental.service";
 import { sendResponse } from "../../utils/sendResponse";
 import status from "http-status";
-import { stat } from "node:fs";
 
 
 const createRentalRequest = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
@@ -29,7 +28,7 @@ const getMyRentalRequests = catchAsync(async(req:Request, res:Response, next:Nex
     sendResponse(res, {
         success : true,
         statusCode : status.OK,
-        message : "Rental requess retrieved successfully!",
+        message : "Rental request retrieved successfully!",
         data : {result}
     })
 })
