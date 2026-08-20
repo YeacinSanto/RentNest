@@ -241,6 +241,7 @@ export type ReviewsOrderByWithRelationInput = {
 
 export type ReviewsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  tenantId_propertyId?: Prisma.ReviewsTenantIdPropertyIdCompoundUniqueInput
   AND?: Prisma.ReviewsWhereInput | Prisma.ReviewsWhereInput[]
   OR?: Prisma.ReviewsWhereInput[]
   NOT?: Prisma.ReviewsWhereInput | Prisma.ReviewsWhereInput[]
@@ -251,7 +252,7 @@ export type ReviewsWhereUniqueInput = Prisma.AtLeast<{
   propertyId?: Prisma.StringFilter<"Reviews"> | string
   tenant?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   property?: Prisma.XOR<Prisma.PropertiesScalarRelationFilter, Prisma.PropertiesWhereInput>
-}, "id">
+}, "id" | "tenantId_propertyId">
 
 export type ReviewsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -348,6 +349,11 @@ export type ReviewsListRelationFilter = {
 
 export type ReviewsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ReviewsTenantIdPropertyIdCompoundUniqueInput = {
+  tenantId: string
+  propertyId: string
 }
 
 export type ReviewsCountOrderByAggregateInput = {

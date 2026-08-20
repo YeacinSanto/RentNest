@@ -11,5 +11,7 @@ model Reviews{
     propertyId String
     property Properties @relation(fields: [propertyId], references: [id])
 
+     @@unique([tenantId, propertyId])
+
     @@map("reviews")
 }

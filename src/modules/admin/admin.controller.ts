@@ -18,6 +18,63 @@ const createCategory = catchAsync(async(req:Request,res:Response,next:NextFuncti
 })
 
 
+const getAllUsers = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+
+    const result = await adminService.getAllUsersFromDB();
+
+    sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "All users retrieved successfully!",
+        data : {result}
+    })
+})
+
+const updateUserStatus = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.params.id as string;
+    const payLoad = req.body;
+
+    const result = await adminService.updateUserStatusIntoDB(userId,payLoad);
+
+    sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "User status updated successfully!",
+        data : result
+    })
+})
+
+const getAllProperties = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const result = await adminService.getAllPropertiesFromDB();
+
+    sendResponse(res, {
+        success: true,
+        statusCode: status.OK,
+        message: "All properties retrieved successfully!",
+        data: result
+    });
+
+    
+})
+
+const getAllRentalRequests = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+
+        const result = await adminService.getAllPropertiesFromDB();
+
+        sendResponse(res, {
+            success: true,
+            statusCode: status.OK,
+            message: "All rental requests retrieved successfully!",
+            data: result
+        });
+    }
+);
+
 export const adminController = {
-    createCategory
+    createCategory,
+    getAllUsers,
+    updateUserStatus,
+    getAllProperties,
+    getAllRentalRequests
 }
