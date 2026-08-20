@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { application, Application, Request, Response } from "express";
 import config from "./config";
 import cors from "cors"
 import cookieParser from "cookie-parser";
@@ -9,6 +9,8 @@ import { adminRoute } from "./modules/admin/admin.route";
 import { rentalRoute } from "./modules/rental/rental.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { paymentRouter } from "./modules/payment/payment.route";
+import { json } from "node:stream/consumers";
+import { paymentController } from "./modules/payment/payment.controller";
 
 const app: Application = express()
 
@@ -17,6 +19,8 @@ app.use(cors({
     origin : config.app_url,
     credentials : true
 }))
+
+app.post("/api/payments/webhook", express.raw({type:"application/json"}),paymentController.stripeWebhook)
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -33,6 +37,7 @@ app.use("/api/admin", adminRoute)
 app.use("/api/rentals",rentalRoute)
 app.use("/api/reviews", reviewRouter);
 app.use("/api/payments",paymentRouter)
+
 
 
 

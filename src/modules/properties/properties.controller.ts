@@ -5,7 +5,14 @@ import { sendResponse } from "../../utils/sendResponse";
 import status from "http-status";
 
 const getProperty = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
-    const result = await propertyService.getAllProperty();
+    const {location, category, minPrice, maxPrice} = req.query;
+
+    const result = await propertyService.getAllProperty({
+        location : location as string,
+        category : category as string,
+        minPrice : minPrice as string,
+        maxPrice : maxPrice as string
+    });
 
     sendResponse(res,{
         success : true,

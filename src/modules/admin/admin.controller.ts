@@ -60,7 +60,7 @@ const getAllProperties = catchAsync(async(req:Request,res:Response,next:NextFunc
 const getAllRentalRequests = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const result = await adminService.getAllPropertiesFromDB();
+        const result = await adminService.getAllRentalRequestFromDB();
 
         sendResponse(res, {
             success: true,

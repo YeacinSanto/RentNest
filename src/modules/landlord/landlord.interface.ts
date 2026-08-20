@@ -12,6 +12,7 @@ export interface IUpdateProperty {
     description?: string;
     location?: string;
     price?: string;
+    status?: "AVAILABLE" | "RENTED" | "UNAVAILABLE";
 }
 
 export interface IUpdateRentalRequest {

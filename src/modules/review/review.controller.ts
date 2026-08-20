@@ -8,7 +8,7 @@ const createReview = catchAsync(async(req:Request, res:Response, next:NextFuncti
     const tenantId = req.user?.id as string;
     const payLoad = req.body;
 
-    const result = reviewService.createReviewIntoDB(payLoad,tenantId);
+    const result = await reviewService.createReviewIntoDB(payLoad,tenantId);
 
     sendResponse(res,{
         success : true,

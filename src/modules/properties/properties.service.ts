@@ -1,13 +1,32 @@
 import { prisma } from "../../lib/prisma"
 
-const getAllProperty = async()=>{
-    const property = await prisma.properties.findMany();
+const getAllProperty = async(filters: {location?:string, category?:string, minPrice?:string, maxPrice?:string})=>{
+    const {location, category, minPrice, maxPrice} = filters;
 
-    if(property.length === 0){
+    const property = await prisma.properties.findMany({
+        where : {
+            location : location ? {contains : location, mode : "insensitive"} : undefined,
+            category : category ? {name : {equals : category, mode : "insensitive"}} : undefined
+        },
+        include : {
+            category : true
+        }
+    });
+
+    const filtered = property.filter((p)=>{
+        const price = Number(p.price);
+
+        if(minPrice && price < Number(minPrice)) return false;
+        if(maxPrice && price > Number(maxPrice)) return false;
+
+        return true;
+    });
+
+    if(filtered.length === 0){
         throw new Error("No property is available at this moment!")
     }
 
-    return property
+    return filtered
 }
 
 const getPropertyById = async(propId : string)=>{

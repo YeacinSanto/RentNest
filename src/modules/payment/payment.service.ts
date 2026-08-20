@@ -72,8 +72,83 @@ const createPayment = async(rentalRequestId:string, tenantId:string)=>{
     }
 }
 
+const handleStripeWebhook = async(payLoad:Buffer, signature:string)=>{
+    let event: Stripe.Event;
+
+    try {
+        event = stripe.webhooks.constructEvent(payLoad,signature,config.stripe_webhook_secret)
+    } catch (error:any) {
+        throw new Error("Invalid Stripe webhook signature");
+    }
+
+    if(event.type==="checkout.session.completed"){
+        const session = event.data.object 
+
+        const paymentId = session.metadata?.paymentId;
+
+        if(!paymentId){
+            throw new Error("Payment ID not found")
+        }
+
+        await prisma.payments.update({
+            where:{
+                id:paymentId
+            },
+            data:{
+                status : "PAID",
+                transactionId: session.payment_intent as string
+            }
+        })
+    }
+
+    return event
+}
+
+
+
+const getMyPayments = async(tenantId:string)=>{
+    const payments = await prisma.payments.findMany({
+        where : {
+            rentalRequest : {
+                tenantId : tenantId
+            }
+        },
+        include : {
+            rentalRequest : true
+        }
+    });
+
+    if(payments.length===0){
+        throw new Error("You don't have any payments")
+    }
+
+    return payments;
+}
+
+const getPayment = async(paymentId:string, tenantId:string)=>{
+    const payment = await prisma.payments.findFirst({
+        where : {
+            id : paymentId,
+            rentalRequest : {
+                tenantId : tenantId
+            }
+        },
+        include : {
+            rentalRequest : true
+        }
+    });
+
+    if(!payment){
+        throw new Error("Payment not found")
+    }
+
+    return payment
+}
 
 
 export const paymentService = {
-    createPayment
+    createPayment,
+    handleStripeWebhook,
+    getMyPayments,
+    getPayment
 }

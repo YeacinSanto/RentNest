@@ -4,15 +4,15 @@ import { ICreateReview } from "./review.interface";
 
 const createReviewIntoDB = async(payLoad:ICreateReview, tenantId:string)=>{
     const {propertyId, rating, comment} = payLoad;
-    const property = await prisma.rentalRequests.findUnique({
+    const rentalRequest = await prisma.rentalRequests.findFirst({
         where : {
             tenantId,
-            id : propertyId,
+            propertyId,
             status : "COMPLETED"
         }
     });
 
-    if(!property){
+    if(!rentalRequest){
         throw new Error("You can only review a property after completing a rental")
     }
 
