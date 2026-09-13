@@ -2,6 +2,7 @@ model Payments{
     id String @id @default(uuid())
     amount String
     transactionId String?
+    checkoutSessionId String? @unique
     rentalRequestId String @unique
 
     method String?

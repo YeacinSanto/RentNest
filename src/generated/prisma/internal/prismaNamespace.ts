@@ -918,7 +918,11 @@ export const PaymentsScalarFieldEnum = {
   id: 'id',
   amount: 'amount',
   transactionId: 'transactionId',
+  checkoutSessionId: 'checkoutSessionId',
   rentalRequestId: 'rentalRequestId',
+  method: 'method',
+  provider: 'provider',
+  paidAt: 'paidAt',
   createdAt: 'createdAt',
   status: 'status'
 } as const
@@ -947,6 +951,7 @@ export const RentalRequestsScalarFieldEnum = {
   tenantId: 'tenantId',
   propertyId: 'propertyId',
   status: 'status',
+  agreedPrice: 'agreedPrice',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

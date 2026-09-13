@@ -21,8 +21,10 @@ app.use(cors({
   credentials: true
 }))
 
+app.post("/api/payments/webhook", express.raw({ type: "application/json" }), paymentController.stripeWebhook)
 
-
+app.get("/payment/success", paymentController.paymentSuccessPage)
+app.get("/payment/cancel", paymentController.paymentCancelPage)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

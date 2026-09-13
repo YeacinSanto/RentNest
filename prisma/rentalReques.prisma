@@ -3,6 +3,7 @@ model RentalRequests {
   tenantId   String
   propertyId String
   status     RentalRequestStatus @default(PENDING)
+  agreedPrice String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

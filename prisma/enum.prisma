@@ -20,10 +20,12 @@ enum RentalRequestStatus {
   APPROVED
   REJECTED
   COMPLETED
+  CANCELLED
 }
 
 enum PaymentStatus{
     PENDING
     PAID
     FAILED
+    REFUNDED
 }

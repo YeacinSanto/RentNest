@@ -39,7 +39,8 @@ export const RentalRequestStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
-  COMPLETED: 'COMPLETED'
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
 } as const
 
 export type RentalRequestStatus = (typeof RentalRequestStatus)[keyof typeof RentalRequestStatus]
@@ -48,7 +49,8 @@ export type RentalRequestStatus = (typeof RentalRequestStatus)[keyof typeof Rent
 export const PaymentStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',
-  FAILED: 'FAILED'
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
 } as const
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

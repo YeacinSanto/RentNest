@@ -1,5 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { ICreateProperty, IUpdateProperty, IUpdateRentalRequest } from "./landlord.interface";
+import { AppError } from "../../utils/AppError";
+import status from "http-status";
 
 const createPropertyIntoDB = async (payLoad: ICreateProperty,landlord: string) => {
     const {title,description,location,price,categoryName} = payLoad
@@ -91,27 +93,34 @@ const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:I
             property : {
                 landlordId : landlordId
             }
+        },
+        include : {
+            property : true
         }
     });
 
     if(!request){
-        throw new Error("Rental request not found");
+        throw new AppError(status.NOT_FOUND, "Rental request not found");
     }
 
-    // if (request.status !== "PENDING") {
-    //     throw new Error("This rental request has already been processed");
-    // }
-
     if (request.status === "REJECTED") {
-        throw new Error("Rejected rental request cannot be updated");
+        throw new AppError(status.CONFLICT, "Rejected rental request cannot be updated");
     }
 
     if (request.status === "COMPLETED") {
-        throw new Error("Rental request is already completed");
+        throw new AppError(status.CONFLICT, "Rental request is already completed");
+    }
+
+    if ((payLoad.status === "APPROVED" || payLoad.status === "REJECTED") && request.status !== "PENDING") {
+        throw new AppError(status.CONFLICT, "This rental request has already been processed");
+    }
+
+    if (payLoad.status === "APPROVED" && request.property.status !== "AVAILABLE") {
+        throw new AppError(status.CONFLICT, "This property is no longer available");
     }
 
     if (payLoad.status === "COMPLETED" &&request.status !== "APPROVED") {
-        throw new Error("Only an approved rental can be completed");
+        throw new AppError(status.BAD_REQUEST, "Only an approved rental can be completed");
     }
 
     if (payLoad.status === "COMPLETED") {
@@ -122,7 +131,7 @@ const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:I
         });
 
         if (!payment || payment.status !== "PAID") {
-            throw new Error("Rental request cannot be completed before payment is made");
+            throw new AppError(status.BAD_REQUEST, "Rental request cannot be completed before payment is made");
         }
     }
 
@@ -131,7 +140,10 @@ const updateRentalRequest = async(requestId:string, landlordId:string, payLoad:I
             id : requestId
         },
         data : {
-            status : payLoad.status
+            status : payLoad.status,
+            // Freeze the rent at the moment of approval so a later price edit
+            // on the property can't change what the tenant is charged.
+            ...(payLoad.status === "APPROVED" ? { agreedPrice : request.property.price } : {})
         }
     })
 
