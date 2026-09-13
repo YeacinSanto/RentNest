@@ -1,0 +1,398 @@
+{
+  "apiName": "RentNest API",
+  "description": "Backend API for RentNest, a property rental platform with Tenant, Landlord, and Admin roles.",
+  "baseUrl": "http://localhost:<PORT>/api",
+  "notes": [
+    "There is NO global versioned prefix like /api/v1 - the base path is just /api.",
+    "Auth is JWT-based via cookies (accessToken, refreshToken) OR an 'Authorization: Bearer <token>' header.",
+    "Login sets httpOnly cookies AND returns the tokens in the JSON body, so a frontend can use either cookie-based or header-based auth.",
+    "There is NO runtime request-body validation library (no zod/joi) - only TypeScript interfaces at compile time on the backend. The frontend should still validate inputs before sending.",
+    "IMPORTANT BACKEND BUG: almost all errors are returned as HTTP status 500, with a hardcoded message 'failed to register user' regardless of the actual error (e.g. not-found, forbidden, duplicate, bad login). The REAL reason is in the 'error' field of the error response body. The frontend should display response.error (or response.message) rather than relying on the HTTP status code to distinguish error types.",
+    "Response success envelope shape is inconsistent across endpoints - some return 'data' as a raw array/object, others wrap lists as 'data.result'. This is called out per-endpoint below.",
+    "'price' (Properties) and 'amount' (Payments) are stored as STRING in the database, not numbers - the frontend should parseFloat/Number() them for display and calculations.",
+    "No pagination is implemented anywhere, even though the response envelope has an optional 'meta' field for it.",
+    "No PUT/PATCH/DELETE routes exist for Reviews, and there is no GET-reviews-by-property endpoint at all.",
+    "No logout endpoint and no refresh-token endpoint exist, despite a refreshToken being issued at login.",
+    "GET /properties/:id does NOT include the 'category' relation, unlike GET /properties which does - likely a backend oversight."
+  ],
+  "authentication": {
+    "type": "JWT",
+    "deliveryMethods": [
+      "httpOnly cookie 'accessToken' (set automatically by POST /auth/login)",
+      "httpOnly cookie 'refreshToken' (set automatically by POST /auth/login, not currently used by any endpoint)",
+      "Authorization header, either 'Authorization: Bearer <accessToken>' or raw 'Authorization: <accessToken>'"
+    ],
+    "roles": ["TENANT", "LANDLORD", "ADMIN"],
+    "notes": "Some endpoints require no specific role (any authenticated user), some require exactly one specific role. See 'auth' field per endpoint."
+  },
+  "successResponseEnvelope": {
+    "success": true,
+    "statusCode": "number",
+    "message": "string",
+    "data": "<endpoint-specific, see below>",
+    "meta": "optional, currently unused by any endpoint (would be { page, limit, total })"
+  },
+  "errorResponseEnvelope": {
+    "success": false,
+    "statusCode": 500,
+    "message": "string (currently always the hardcoded text 'failed to register user' - not reliable, ignore)",
+    "error": "string - the actual error message, e.g. 'User not found', 'Property not found or you are not the owner', etc."
+  },
+  "enums": {
+    "Role": ["TENANT", "LANDLORD", "ADMIN"],
+    "UserStatus": ["ACTIVE", "BANNED"],
+    "PropertyStatus": ["AVAILABLE", "RENTED", "UNAVAILABLE"],
+    "RentalRequestStatus": ["PENDING", "APPROVED", "REJECTED", "COMPLETED"],
+    "PaymentStatus": ["PENDING", "PAID", "FAILED"]
+  },
+  "models": {
+    "User": {
+      "id": "string (uuid)",
+      "name": "string",
+      "email": "string",
+      "password": "string (never returned in API responses)",
+      "role": "Role",
+      "status": "UserStatus",
+      "createdAt": "string (ISO datetime)",
+      "updatedAt": "string (ISO datetime)"
+    },
+    "Category": {
+      "id": "string (uuid)",
+      "name": "string",
+      "description": "string"
+    },
+    "Property": {
+      "id": "string (uuid)",
+      "title": "string",
+      "description": "string",
+      "location": "string",
+      "price": "string (numeric value stored as string)",
+      "categoryId": "string (uuid)",
+      "landlordId": "string (uuid)",
+      "status": "PropertyStatus",
+      "createdAt": "string (ISO datetime)",
+      "updatedAt": "string (ISO datetime)",
+      "category": "Category (only included on GET /properties, not on GET /properties/:id)"
+    },
+    "RentalRequest": {
+      "id": "string (uuid)",
+      "tenantId": "string (uuid)",
+      "propertyId": "string (uuid)",
+      "status": "RentalRequestStatus",
+      "createdAt": "string (ISO datetime)",
+      "updatedAt": "string (ISO datetime)"
+    },
+    "Review": {
+      "id": "string (uuid)",
+      "rating": "number (int)",
+      "comment": "string",
+      "createdAt": "string (ISO datetime)",
+      "tenantId": "string (uuid)",
+      "propertyId": "string (uuid)"
+    },
+    "Payment": {
+      "id": "string (uuid)",
+      "amount": "string (numeric value stored as string)",
+      "transactionId": "string | null",
+      "rentalRequestId": "string (uuid)",
+      "method": "string | null (e.g. 'CARD')",
+      "provider": "string (default 'STRIPE')",
+      "paidAt": "string (ISO datetime) | null",
+      "createdAt": "string (ISO datetime)",
+      "status": "PaymentStatus",
+      "rentalRequest": "RentalRequest (included on payment GET endpoints)"
+    }
+  },
+  "endpoints": [
+    {
+      "group": "Auth",
+      "method": "POST",
+      "path": "/auth/register",
+      "auth": "public",
+      "requestBody": {
+        "name": "string",
+        "email": "string",
+        "password": "string",
+        "role": "Role ('TENANT' or 'LANDLORD' only - 'ADMIN' is rejected server-side)"
+      },
+      "successStatus": 201,
+      "responseData": "User (without password)",
+      "errors": ["email already registered", "attempting to register with role ADMIN"]
+    },
+    {
+      "group": "Auth",
+      "method": "POST",
+      "path": "/auth/login",
+      "auth": "public",
+      "requestBody": {
+        "email": "string",
+        "password": "string"
+      },
+      "successStatus": 200,
+      "responseData": {
+        "accessToken": "string (JWT)",
+        "refreshToken": "string (JWT)"
+      },
+      "sideEffects": "Sets httpOnly cookies 'accessToken' and 'refreshToken'.",
+      "errors": ["user not found", "user is BANNED", "password mismatch"]
+    },
+    {
+      "group": "Auth",
+      "method": "GET",
+      "path": "/auth/me",
+      "auth": "any authenticated user (TENANT, LANDLORD, or ADMIN)",
+      "successStatus": 200,
+      "responseData": "User (without password)"
+    },
+    {
+      "group": "Properties (public)",
+      "method": "GET",
+      "path": "/properties",
+      "auth": "public",
+      "queryParams": {
+        "location": "string, optional, case-insensitive partial match",
+        "category": "string, optional, category NAME (not id), case-insensitive exact match",
+        "minPrice": "string, optional, numeric",
+        "maxPrice": "string, optional, numeric"
+      },
+      "successStatus": 200,
+      "responseData": "Property[] (each includes nested 'category'), only status=AVAILABLE properties are returned",
+      "errors": ["no properties match filters -> error response"]
+    },
+    {
+      "group": "Properties (public)",
+      "method": "GET",
+      "path": "/properties/:id",
+      "auth": "public",
+      "pathParams": { "id": "string (property uuid)" },
+      "successStatus": 200,
+      "responseData": "Property (category NOT included)",
+      "errors": ["property not found"]
+    },
+    {
+      "group": "Properties (public)",
+      "method": "GET",
+      "path": "/categories",
+      "auth": "public",
+      "successStatus": 200,
+      "responseData": "Category[]",
+      "errors": ["no categories exist"]
+    },
+    {
+      "group": "Landlord",
+      "method": "POST",
+      "path": "/landlord/properties",
+      "auth": "LANDLORD",
+      "requestBody": {
+        "title": "string",
+        "description": "string",
+        "location": "string",
+        "price": "string",
+        "categoryName": "string (must exactly match an existing Category.name, case-sensitive)"
+      },
+      "successStatus": 201,
+      "responseData": "Property (landlordId is taken from the authenticated user, status defaults to AVAILABLE)",
+      "errors": ["categoryName does not match any existing category -> Prisma error"]
+    },
+    {
+      "group": "Landlord",
+      "method": "PUT",
+      "path": "/landlord/properties/:id",
+      "auth": "LANDLORD (must be the owning landlord)",
+      "pathParams": { "id": "string (property uuid)" },
+      "requestBody": {
+        "title": "string, optional",
+        "description": "string, optional",
+        "location": "string, optional",
+        "price": "string, optional",
+        "status": "PropertyStatus, optional"
+      },
+      "successStatus": 200,
+      "responseData": "Property (updated)",
+      "errors": ["property not found or you are not the owner"]
+    },
+    {
+      "group": "Landlord",
+      "method": "DELETE",
+      "path": "/landlord/properties/:id",
+      "auth": "LANDLORD (must be the owning landlord)",
+      "pathParams": { "id": "string (property uuid)" },
+      "successStatus": 200,
+      "responseData": "[] (always an empty array, regardless of what was deleted)",
+      "errors": ["property not found or you are not the owner"]
+    },
+    {
+      "group": "Landlord",
+      "method": "GET",
+      "path": "/landlord/requests",
+      "auth": "LANDLORD",
+      "successStatus": 200,
+      "responseData": "{ result: RentalRequest[] } -- NOTE: wrapped in a 'result' key, unlike most list endpoints",
+      "notes": "Returns rental requests for properties owned by this landlord. No tenant/property details included, only ids."
+    },
+    {
+      "group": "Landlord",
+      "method": "PATCH",
+      "path": "/landlord/requests/:id",
+      "auth": "LANDLORD (must own the property tied to the request)",
+      "pathParams": { "id": "string (rental request uuid)" },
+      "requestBody": {
+        "status": "'APPROVED' | 'REJECTED' | 'COMPLETED'"
+      },
+      "successStatus": 200,
+      "responseData": "RentalRequest (updated)",
+      "errors": [
+        "request not found / not owned by this landlord",
+        "already REJECTED or COMPLETED (cannot change further)",
+        "transitioning to COMPLETED requires current status APPROVED AND an existing Payment with status PAID"
+      ]
+    },
+    {
+      "group": "Admin",
+      "method": "POST",
+      "path": "/admin/categories",
+      "auth": "ADMIN",
+      "requestBody": {
+        "name": "string",
+        "description": "string"
+      },
+      "successStatus": 201,
+      "responseData": "Category",
+      "errors": ["category name already exists"]
+    },
+    {
+      "group": "Admin",
+      "method": "GET",
+      "path": "/admin/users",
+      "auth": "ADMIN",
+      "successStatus": 200,
+      "responseData": "{ result: User[] } -- NOTE: wrapped in a 'result' key",
+      "errors": ["no users exist"]
+    },
+    {
+      "group": "Admin",
+      "method": "PATCH",
+      "path": "/admin/users/:id",
+      "auth": "ADMIN",
+      "pathParams": { "id": "string (user uuid)" },
+      "requestBody": {
+        "status": "'ACTIVE' | 'BANNED'"
+      },
+      "successStatus": 200,
+      "responseData": "User (updated, without password)",
+      "errors": ["user not found"]
+    },
+    {
+      "group": "Admin",
+      "method": "GET",
+      "path": "/admin/properties",
+      "auth": "ADMIN",
+      "successStatus": 200,
+      "responseData": "Property[] (ALL statuses, no category/landlord included)",
+      "notes": "Unlike the public listing, this is not filtered to AVAILABLE only."
+    },
+    {
+      "group": "Admin",
+      "method": "GET",
+      "path": "/admin/rentals",
+      "auth": "ADMIN",
+      "successStatus": 200,
+      "responseData": "RentalRequest[] (all, no includes)"
+    },
+    {
+      "group": "Rental",
+      "method": "POST",
+      "path": "/rentals/",
+      "auth": "TENANT",
+      "requestBody": {
+        "propertyId": "string (uuid)"
+      },
+      "successStatus": 201,
+      "responseData": "RentalRequest (status defaults to PENDING)",
+      "errors": ["property not found"]
+    },
+    {
+      "group": "Rental",
+      "method": "GET",
+      "path": "/rentals/",
+      "auth": "TENANT",
+      "successStatus": 200,
+      "responseData": "{ result: RentalRequest[] } -- NOTE: wrapped in a 'result' key, scoped to the authenticated tenant",
+      "errors": ["no rental requests exist for this tenant"]
+    },
+    {
+      "group": "Rental",
+      "method": "GET",
+      "path": "/rentals/:id",
+      "auth": "TENANT (must own the request)",
+      "pathParams": { "id": "string (rental request uuid)" },
+      "successStatus": 200,
+      "responseData": "RentalRequest",
+      "errors": ["not found / not owned by this tenant"]
+    },
+    {
+      "group": "Review",
+      "method": "POST",
+      "path": "/reviews/",
+      "auth": "TENANT",
+      "requestBody": {
+        "propertyId": "string (uuid)",
+        "rating": "number",
+        "comment": "string"
+      },
+      "successStatus": 201,
+      "responseData": "Review",
+      "errors": [
+        "tenant has no COMPLETED rental request for this property",
+        "tenant already reviewed this property (unique constraint tenantId+propertyId)"
+      ],
+      "notes": "This is the ONLY review endpoint. There is no way to list/fetch reviews (not even by property) via the API currently."
+    },
+    {
+      "group": "Payment",
+      "method": "POST",
+      "path": "/payments/",
+      "auth": "TENANT",
+      "requestBody": {
+        "rentalRequestId": "string (uuid)"
+      },
+      "successStatus": 201,
+      "responseData": {
+        "payment": "Payment",
+        "checkoutUrl": "string | null (Stripe Checkout session URL - redirect the user here to pay)"
+      },
+      "errors": [
+        "no APPROVED rental request found for this tenant with that id",
+        "a payment already exists for this rental request"
+      ],
+      "notes": "Creates a Stripe Checkout session in EUR. amount = property.price. On completion, Stripe calls the webhook below to mark the payment PAID. Hardcoded success/cancel redirect URLs currently point to http://localhost:3000/payment/success and /cancel - the frontend must run on that origin/path or the backend needs updating."
+    },
+    {
+      "group": "Payment",
+      "method": "GET",
+      "path": "/payments/",
+      "auth": "TENANT",
+      "successStatus": 200,
+      "responseData": "Payment[] (each includes nested 'rentalRequest'), scoped to the authenticated tenant",
+      "errors": ["no payments exist for this tenant"]
+    },
+    {
+      "group": "Payment",
+      "method": "GET",
+      "path": "/payments/:id",
+      "auth": "TENANT (must own the underlying rental request)",
+      "pathParams": { "id": "string (payment uuid)" },
+      "successStatus": 200,
+      "responseData": "Payment (includes nested 'rentalRequest')",
+      "errors": ["not found / not owned by this tenant"]
+    },
+    {
+      "group": "Payment",
+      "method": "POST",
+      "path": "/payments/webhook",
+      "auth": "public (verified via Stripe signature header 'stripe-signature')",
+      "notes": "Called by Stripe, not by the frontend directly. Included for completeness only - do not call this from the frontend.",
+      "responseFormat": "Plain JSON { received: true } on success (200) or plain text on error (400) - does NOT use the standard response envelope."
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import { adminRoute } from "./modules/admin/admin.route";
 import { rentalRoute } from "./modules/rental/rental.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { paymentRouter } from "./modules/payment/payment.route";
-import { json } from "node:stream/consumers";
+
 import { paymentController } from "./modules/payment/payment.controller";
 
 
@@ -21,7 +21,8 @@ app.use(cors({
   credentials: true
 }))
 
-app.post("/api/payments/webhook", express.raw({ type: "application/json" }), paymentController.stripeWebhook)
+
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

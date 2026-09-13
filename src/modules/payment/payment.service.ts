@@ -62,8 +62,9 @@ const createPayment = async(rentalRequestId:string, tenantId:string)=>{
             rentalRequestId : rentalRequest.id
         },
 
-        success_url: "http://localhost:3000/payment/success",
-        cancel_url: "http://localhost:3000/payment/cancel"
+        success_url: `${config.app_url}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${config.app_url}/payment/cancel`,
+        
     });
 
     return{

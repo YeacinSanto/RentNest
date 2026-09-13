@@ -8,4 +8,5 @@ router.get("/properties",propertyController.getProperty)
 router.get("/properties/:id",propertyController.getPropertyById)
 router.get("/categories", propertyController.getPropertyCategory)
 
+
 export const propertyRoute = router
