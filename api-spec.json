@@ -146,6 +146,26 @@
       "responseData": "User (without password)"
     },
     {
+      "group": "Auth",
+      "method": "PATCH",
+      "path": "/auth/me",
+      "auth": "any authenticated user (TENANT, LANDLORD, or ADMIN)",
+      "requestBody": {
+        "name": "string, optional",
+        "currentPassword": "string, required only if newPassword is sent - must match the caller's existing password",
+        "newPassword": "string, optional"
+      },
+      "successStatus": 200,
+      "responseData": "User (updated, without password)",
+      "errors": [
+        "email field sent in the body -> rejected, email can never be changed via this endpoint",
+        "newPassword sent without currentPassword",
+        "currentPassword does not match",
+        "neither name nor newPassword sent -> 'Nothing to update'"
+      ],
+      "notes": "Email is immutable - there is no endpoint to change it. Updates only the authenticated user's own record (userId comes from the JWT, not a path param)."
+    },
+    {
       "group": "Properties (public)",
       "method": "GET",
       "path": "/properties",

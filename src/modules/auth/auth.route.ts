@@ -11,5 +11,7 @@ router.post("/login",authController.userLogin)
 
 router.get("/me", auth(Role.ADMIN,Role.LANDLORD,Role.TENANT),authController.myProfile)
 
+router.patch("/me", auth(Role.ADMIN,Role.LANDLORD,Role.TENANT),authController.updateProfile)
+
 
 export const authRouter = router;

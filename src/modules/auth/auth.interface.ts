@@ -12,3 +12,9 @@ export interface ILoginPayLoad{
     email : string,
     password : string
 }
+
+export interface IUpdateProfilePayLoad{
+    name? : string,
+    currentPassword? : string,
+    newPassword? : string
+}

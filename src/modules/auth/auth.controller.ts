@@ -47,6 +47,20 @@ const userLogin = catchAsync(async(req:Request,res:Response,next:NextFunction)=>
     })
 })
 
+const updateProfile = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.user?.id as string;
+    const payLoad = req.body;
+
+    const result = await authService.updateProfile(userId,payLoad);
+
+    sendResponse(res,{
+        success : true,
+        statusCode : status.OK,
+        message : "Profile updated successfully!",
+        data : result
+    })
+})
+
 const myProfile = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user?.id!;
@@ -66,5 +80,6 @@ const myProfile = catchAsync(
 export const authController = {
     registerUser,
     userLogin,
+    updateProfile,
     myProfile
 }

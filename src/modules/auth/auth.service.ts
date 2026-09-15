@@ -1,7 +1,7 @@
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcrypt"
-import { ICreatePayLoad, ILoginPayLoad } from "./auth.interface";
+import { ICreatePayLoad, ILoginPayLoad, IUpdateProfilePayLoad } from "./auth.interface";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../utils/jwt";
 import { Role } from "../../generated/prisma/enums";
@@ -93,6 +93,50 @@ const userLogin = async(payLoad:ILoginPayLoad)=>{
 }
 
 
+const updateProfile = async(userId:string, payLoad:IUpdateProfilePayLoad & {email?:string})=>{
+    if(payLoad.email){
+        throw new Error("Email cannot be changed")
+    }
+
+    const user = await prisma.user.findUniqueOrThrow({
+        where : {id : userId}
+    });
+
+    const data : {name?:string, password?:string} = {};
+
+    if(payLoad.name){
+        data.name = payLoad.name;
+    }
+
+    if(payLoad.newPassword){
+        if(!payLoad.currentPassword){
+            throw new Error("Current password is required to set a new password")
+        }
+
+        const isPasswordMatched = await bcrypt.compare(payLoad.currentPassword,user.password)
+
+        if(!isPasswordMatched){
+            throw new Error("Current password is incorrect")
+        }
+
+        data.password = await bcrypt.hash(payLoad.newPassword,Number(config.bcrypt_salt_round))
+    }
+
+    if(Object.keys(data).length===0){
+        throw new Error("Nothing to update")
+    }
+
+    const updatedUser = await prisma.user.update({
+        where : {id : userId},
+        data,
+        omit : {
+            password : true
+        }
+    });
+
+    return updatedUser
+}
+
 const getMyProfile = async(userId:string)=>{
      const user = await prisma.user.findUniqueOrThrow({
         where : {id : userId},
@@ -108,5 +152,6 @@ const getMyProfile = async(userId:string)=>{
 export const authService = {
     userRegister,
     userLogin,
+    updateProfile,
     getMyProfile
 }
