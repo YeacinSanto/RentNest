@@ -48,6 +48,21 @@ const deleteProperty = catchAsync(async(req:Request,res:Response,next:NextFuncti
 
 })
 
+const addPropertyImages = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const propertyId = req.params.id as string;
+    const landlordId = req.user?.id as string;
+    const files = req.files as Express.Multer.File[];
+
+    const result = await landlordService.addPropertyImagesIntoDB(propertyId,landlordId,files);
+
+    sendResponse(res,{
+        success : true,
+        statusCode : status.OK,
+        message : "Property images uploaded successfully!",
+        data : result
+    })
+})
+
 const getAllRentalRequest = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const landlordId = req.user?.id as string;
 
@@ -82,6 +97,7 @@ export const landlordController = {
     createProperty,
     updateProperty,
     deleteProperty,
+    addPropertyImages,
     getAllRentalRequest,
     updateRentalRequest
 }

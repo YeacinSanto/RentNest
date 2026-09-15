@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma";
 import { ICreateProperty, IUpdateProperty, IUpdateRentalRequest } from "./landlord.interface";
 import { AppError } from "../../utils/AppError";
 import status from "http-status";
+import { uploadImageToCloudinary } from "../../utils/uploadImage";
 
 const createPropertyIntoDB = async (payLoad: ICreateProperty,landlord: string) => {
     const {title,description,location,price,categoryName} = payLoad
@@ -73,6 +74,40 @@ const deletePropertyFromDB = async(propertyId:string,landlordId:string)=>{
     })
 
     return null
+}
+
+const addPropertyImagesIntoDB = async(propertyId:string, landlordId:string, files:Express.Multer.File[])=>{
+    const property = await prisma.properties.findFirst({
+        where : {
+            id : propertyId,
+            landlordId : landlordId
+        }
+    });
+
+    if(!property){
+        throw new AppError(status.NOT_FOUND, "Property not found or you are not the owner");
+    }
+
+    if(!files || files.length === 0){
+        throw new AppError(status.BAD_REQUEST, "At least one image is required");
+    }
+
+    const uploadedUrls = await Promise.all(
+        files.map((file) => uploadImageToCloudinary(file.buffer, `rentnest/properties/${propertyId}`))
+    );
+
+    const updatedProperty = await prisma.properties.update({
+        where : {
+            id : propertyId
+        },
+        data : {
+            images : {
+                push : uploadedUrls
+            }
+        }
+    });
+
+    return updatedProperty;
 }
 
 const getALlRentalRequestFromDB = async(landlordId : string)=>{
@@ -154,6 +189,7 @@ export const landlordService = {
     createPropertyIntoDB,
     updatePropertyIntoDB,
     deletePropertyFromDB,
+    addPropertyImagesIntoDB,
     getALlRentalRequestFromDB,
     updateRentalRequest
 };

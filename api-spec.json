@@ -70,6 +70,7 @@
       "categoryId": "string (uuid)",
       "landlordId": "string (uuid)",
       "status": "PropertyStatus",
+      "images": "string[] (Cloudinary secure URLs, defaults to empty array, populated via POST /landlord/properties/:id/images)",
       "createdAt": "string (ISO datetime)",
       "updatedAt": "string (ISO datetime)",
       "category": "Category (only included on GET /properties, not on GET /properties/:id)"
@@ -220,6 +221,23 @@
       "successStatus": 200,
       "responseData": "[] (always an empty array, regardless of what was deleted)",
       "errors": ["property not found or you are not the owner"]
+    },
+    {
+      "group": "Landlord",
+      "method": "POST",
+      "path": "/landlord/properties/:id/images",
+      "auth": "LANDLORD (must be the owning landlord)",
+      "pathParams": { "id": "string (property uuid)" },
+      "requestBody": "multipart/form-data, NOT JSON - field name 'images', up to 8 files, 5MB max per file, mimetypes limited to image/jpeg, image/png, image/webp, image/avif",
+      "successStatus": 200,
+      "responseData": "Property (updated, 'images' array has the new Cloudinary URLs appended to any existing ones)",
+      "errors": [
+        "property not found or you are not the owner",
+        "no files uploaded (at least one image is required)",
+        "file rejected for wrong mimetype",
+        "file exceeds 5MB or more than 8 files sent"
+      ],
+      "notes": "Files are uploaded to Cloudinary server-side (folder 'rentnest/properties/<propertyId>') and only the resulting secure URLs are stored - the backend never persists files to local disk. Requires CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET to be configured server-side."
     },
     {
       "group": "Landlord",

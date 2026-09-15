@@ -7,6 +7,7 @@ model Properties{
     categoryId String
     landlordId String
     status PropertyStatus @default(AVAILABLE)
+    images String[] @default([])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
