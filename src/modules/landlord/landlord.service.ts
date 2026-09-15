@@ -110,6 +110,19 @@ const addPropertyImagesIntoDB = async(propertyId:string, landlordId:string, file
     return updatedProperty;
 }
 
+const getAllPropertiesFromDB = async(landlordId: string)=>{
+    const properties = await prisma.properties.findMany({
+        where : {
+            landlordId
+        },
+        include : {
+            category : true
+        }
+    });
+
+    return properties
+}
+
 const getALlRentalRequestFromDB = async(landlordId : string)=>{
     const request = await prisma.rentalRequests.findMany({
         where : {
@@ -190,6 +203,7 @@ export const landlordService = {
     updatePropertyIntoDB,
     deletePropertyFromDB,
     addPropertyImagesIntoDB,
+    getAllPropertiesFromDB,
     getALlRentalRequestFromDB,
     updateRentalRequest
 };

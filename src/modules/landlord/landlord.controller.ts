@@ -63,6 +63,19 @@ const addPropertyImages = catchAsync(async(req:Request,res:Response,next:NextFun
     })
 })
 
+const getAllProperties = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const landlordId = req.user?.id as string;
+
+    const result = await landlordService.getAllPropertiesFromDB(landlordId);
+
+    sendResponse(res,{
+        success : true,
+        statusCode : status.OK,
+        message : "Properties retrieved successfully!",
+        data : result
+    })
+})
+
 const getAllRentalRequest = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const landlordId = req.user?.id as string;
 
@@ -98,6 +111,7 @@ export const landlordController = {
     updateProperty,
     deleteProperty,
     addPropertyImages,
+    getAllProperties,
     getAllRentalRequest,
     updateRentalRequest
 }
