@@ -13,7 +13,7 @@ model Payments{
 
     status PaymentStatus @default(PENDING)
 
-    rentalRequest RentalRequests @relation(fields: [rentalRequestId], references: [id])
+    rentalRequest RentalRequests @relation(fields: [rentalRequestId], references: [id], onDelete: Cascade)
 
 
 

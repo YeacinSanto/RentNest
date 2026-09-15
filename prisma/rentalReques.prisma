@@ -10,5 +10,5 @@ model RentalRequests {
  payment Payments?
 
   tenant     User       @relation(fields: [tenantId], references: [id])
-  property   Properties @relation(fields: [propertyId], references: [id])
+  property   Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }

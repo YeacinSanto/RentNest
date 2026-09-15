@@ -9,7 +9,7 @@ model Reviews{
     tenant User @relation(fields: [tenantId], references: [id])
 
     propertyId String
-    property Properties @relation(fields: [propertyId], references: [id])
+    property Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
      @@unique([tenantId, propertyId])
 

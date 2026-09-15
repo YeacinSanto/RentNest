@@ -939,6 +939,7 @@ export const PropertiesScalarFieldEnum = {
   categoryId: 'categoryId',
   landlordId: 'landlordId',
   status: 'status',
+  images: 'images',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
